@@ -1,0 +1,52 @@
+Stage {
+
+	asset
+	default
+
+	chapter {
+		scene {
+			voiceover
+			background	
+			video // low priority
+		
+			at {
+				asset-ref {
+					animation [ slideIn/Out, fadeIn/Out ]
+					play (if asset is video or audio)
+					show (no animation, appears at x,y)
+				}			
+			}		
+			wait
+		}
+	}
+}
+
+StageObject
+ChapterObject
+SceneObject
+TimeCodeObject
+EventObject
+
+Asset
+	-ImageAsset
+	-VideoAsset
+	-HTMLAsset
+	
+	
+Ideas:
+
+- Allow referring to assets by name
+
+- Allow html fragments to be specified in asset
+
+- Provide constants for relative positioning.  center, corners, center-left, center-right, center-bottom, center-top
+
+- Allow updating asset html contents.
+
+- Loops
+
+- Asset Groups (Seems like HTML dom nodes could handle this need so it would really be to interact with several elements at once using one call)
+
+- Specify seconds for the timecode as opposed to string.  Allow for variables and additive offsets.
+
+- Don't want assets at scene level.  It makes cleanup and preloading difficult.

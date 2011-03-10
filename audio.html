@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>audio</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Mike">
+	<!-- Date: 2011-03-07 -->
+	<script type="text/javascript" charset="utf-8" src="ext-base.js"></script>
+	<script type="text/javascript" charset="utf-8" src="ext-all.js"></script>
+</head>
+<body>
+
+<audio id="testaudio" name="testaudio" controls preload="auto" autobuffer> 
+  <source src="sounds/drop.mp3" />
+</audio>
+<br/>	
+<audio id="testaudio2" name="testaudio2" controls preload="auto" autobuffer> 
+  <source src="sounds/boarding.mp3" />
+</audio>
+<br/>
+<audio id="testaudio3" name="testaudio3" controls preload="auto" autobuffer> 
+  <source src="sounds/round.mp3" />
+</audio>
+<br/>
+<audio id="testaudio4" name="testaudio4" controls preload="auto" autobuffer> 
+  <source src="sounds/river.mp3" />
+</audio>
+<br/>
+
+<p>
+<a href="javascript:start();">Play (User Initiated)</a>
+<p>
+<a href="javascript:setTimeout('start();', 100)">Play (Time Based)</a>
+<p>
+<a href="javascript:load();">Load All (User Initiated)</a>
+<p>
+<a href="javascript:load();">Load All (Time Based)</a>
+
+<div id="testaudio-play-controls" style="opacity: 1">
+<p>
+<a href="javascript:setTimeout('startShort();', 100)">(#1) Play Short</a>
+</div>
+<div id="testaudio2-play-controls" style="opacity: 1">
+<p>
+<a href="javascript:setTimeout('startLong();', 100)">(#2) Play Long</a>
+</div>
+<div id="testaudio3-play-controls" style="opacity: 1">
+<p>
+<a href="javascript:setTimeout('startShort2();', 100)">(#3) Play Short 2</a>
+</div>
+<div id="testaudio4-play-controls" style="opacity: 1">
+<p>
+<a href="javascript:setTimeout('startLong2();', 100)">(#4) Play Long 2</a>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+	function start() {
+		var testaudio = document.getElementById("testaudio");
+		testaudio.load();
+		testaudio.play();
+	}
+	
+	function startShort() {
+		var testaudio = document.getElementById("testaudio");
+		testaudio.play();
+	}
+	
+	function startShort2() {
+		var testaudio = document.getElementById("testaudio3");
+		testaudio.play();
+	}
+	
+	function startLong() {
+		var testaudio = document.getElementById("testaudio2");
+		testaudio.play();
+	}
+	
+	function startLong2() {
+		var testaudio = document.getElementById("testaudio4");
+		testaudio.play();
+	}
+	
+	var elements = new Array();
+	
+	function preload(dom) {
+		console.log("preload: " + dom);
+		var el = Ext.get(dom);
+		el.on("load", loaded);
+		el.on("loadstart", loadstart);
+		el.on("stalled", stalled);
+		el.on("loadedmetadata", loadedmetadata);
+		el.on("loadeddata", loadeddata);
+		el.on("canplaythrough", canplaythrough);
+		if((el.dom.buffered != undefined) && (el.dom.buffered.length != 0)) {
+			el.on("progress", progress);
+		}
+		
+		
+		//el.dom.onload = nextload;
+		elements.push(el);
+	}
+	function progress(event, audio) {
+		//console.log(arguments);
+	    var loaded = parseInt(((audio.buffered.end(0) / audio.duration) * 100), 10);
+		console.log("loaded: " + loaded + "% of " + audio.id);
+		// because onload isn't called on mobile safari, we have to check here...
+		if(loaded == 100) {
+			Ext.get(audio.id + "-play-controls").show();
+			Ext.get(audio.id + "-play-controls").setOpacity(1, true);
+			nextload();
+		}
+	}
+	function loaded() {
+		// this isn't called on MobileSafari
+		console.log("> load");
+//		nextload();
+	}
+	
+	function loadstart() {
+		console.log("> loadstart");
+	}
+	
+	function stalled() {
+		console.log("> stalled");
+	}
+	
+	function loadedmetadata() {
+		console.log("> loadedmetadata");
+	}
+	
+	function loadeddata() {
+		console.log("> loadeddata");
+	}
+	
+	function canplaythrough() {
+		console.log("> canplaythrough");
+	}
+	
+	function nextload() {
+		var el = elements.pop();
+		if(el) {
+			console.log("Loading next.");
+			el.dom.load();			
+		} else {
+			console.log("All done!");
+			//Ext.get("play-controls").show(true);
+		}
+	}
+	
+	function load() {
+		preload("testaudio");
+		preload("testaudio2");
+		preload("testaudio3");
+		preload("testaudio4");
+
+		nextload();
+		/*
+		var testaudio2 = document.getElementById("testaudio2");
+		testaudio2.load();
+
+		var testaudio = document.getElementById("testaudio");
+		testaudio.load();
+		
+		var testaudio3 = document.getElementById("testaudio3");
+		testaudio3.load();
+		
+		var testaudio4 = document.getElementById("testaudio4");
+		testaudio4.load();		
+		*/
+	}
+	
+</script>
+
+</body>
+</html>

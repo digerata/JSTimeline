@@ -29,11 +29,22 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 				
 			if(config.chapterIndex)
 				this.chapterIndex = config.chapterIndex;
+				
+			if(config.elid) {
+				this.elid = config.elid;
+			}
 		}
 		
-		this.el = Ext.DomHelper.insertFirst(Ext.getBody(), {
-			style: "width: " + this.width + "px; height: " + this.height + "px; overflow: hidden; position: relative;"
-		}, true);
+		if(this.elid) {
+			this.el = Ext.DomHelper.insertFirst(Ext.get(this.elid), {
+				style: "width: " + this.width + "px; height: " + this.height + "px; overflow: hidden; position: relative;"
+			}, true);
+		} else {
+			this.el = Ext.DomHelper.insertFirst(Ext.getBody(), {
+				style: "width: " + this.width + "px; height: " + this.height + "px; overflow: hidden; position: relative;"
+			}, true);
+		}
+		
 		
 		this.promptEl = Ext.DomHelper.insertFirst(this.el, {
 			id: "stage-prompt",
@@ -43,9 +54,7 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 		this.promptEl.setLeftTop(360, (this.height / 2) - this.promptEl.getHeight());
 		
 		this.promptEl.on("click", function() {
-			this.promptEl.hide();
 			this.start();
-			this.promptEl.removeAllListeners();
 		}, this);
 	},
 	
@@ -80,6 +89,8 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 	},
 	
 	nextChapter: function() {
+		this.promptEl.hide();
+		this.promptEl.removeAllListeners();
 		this.currentChapter.stop();
 		this.currentChapter.exit();
 		this.chapterIndex++;
@@ -93,6 +104,9 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 	},
 	
 	start: function(chapterIndex) {
+		this.promptEl.hide();
+		this.promptEl.removeAllListeners();
+		
 		if(chapterIndex)
 			this.chapterIndex = chapterIndex - 1;
 			

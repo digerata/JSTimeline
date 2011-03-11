@@ -65,7 +65,7 @@ Ext.extend(f.ImageAsset, f.Asset, {
 				this.width = 100;
 			if(!this.height) 
 				this.height = 100;
-			this.el = Ext.DomHelper.append(parentEld, {tag: 'div', cls: 'placeholder', style: "position: absolute; top: 768px; z-index: 10; width: " + this.width + "px; height: " + this.height + "px;"
+			this.el = Ext.DomHelper.append(parentEld, {tag: 'div', cls: 'placeholder', style: "position: absolute; top: 768px; z-index: 10; width: " + this.width + "px; height: " + this.height + "px;",
 				html: this.placeholder }, true);
 		} else {
 			this.el = Ext.DomHelper.append(parentEl, {tag:'img', src: this.src, border: 0, style: "position: absolute; top: 768px; z-index: 10;" }, true);

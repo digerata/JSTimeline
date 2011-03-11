@@ -19,13 +19,153 @@
 		color: #666;
 		text-align: center;
 	}
+	
+	#banner
+	{
+	    background-color:white;
+		height: 90px;
+	}
+
+	#course-title
+	{
+	    background-color:white;
+	    float:left;
+	    padding:10px 0 0 32px;
+	    color:#444;
+	    font-family:verdana;
+	}
+
+	#course-title>h1
+	{
+	    font-size:12pt;
+	    font-weight:bold;
+	    margin:0;
+	    padding:0;
+	}
+
+	#course-title>h2
+	{
+	    font-size:11pt;
+	    font-weight:normal;
+	    margin:0;
+	    padding:0;
+	}
+
+	#kia-logo
+	{
+	    background-color:white;
+	    float:right;
+	    padding-right:32px;
+	    padding-top:6px;
+	    width:240px;
+	}
+
+	#menubar
+	{
+	    clear:both;
+	    background-image:url(container/menubar-gradient.png);
+	    background-repeat:repeat-x;
+	    height:31px;
+	}
+	
+	#navbar
+	{
+	    background-image:url(container/bar-bg.png);
+	    background-repeat:repeat-x;
+	    position:fixed;
+	    height:62px;
+	    width:100%;
+	    bottom:0px;
+	    z-index:1;
+	}
+
+	#menu-button
+	{
+	    display:block;
+	    position:fixed;
+	    bottom:7px;
+	    left:12px;
+	    background-image:url(container/menu-button.png);
+	    width:68px;
+	    height:36px;
+	}
+
+	#next-button
+	{
+	    display:block;
+	    float:right;
+	    background-image:url(container/next-button.png);
+	    width:57px;
+	    height:51px;
+	    margin:10px 20px 0 20px;
+	}
+
+	#play-button
+	{
+	    display:block;
+	    float:right;
+	    background-image:url(container/play-button.png);
+	    width:39px;
+	    height:44px;
+	    margin:14px 20px 0 20px;
+	}
+
+	#pause-button
+	{
+	    display:none;
+	    float:right;
+	    background-image:url(container/pause-button.png);
+	    width:35px;
+	    height:41px;
+	    margin:15px 20px 0 20px;
+	}
+
+	#replay-button
+	{
+	    display:block;
+	    float:right;
+	    background-image:url(container/replay-button.png);
+	    width:40px;
+	    height:37px;
+	    margin:16px 20px 0 20px;
+	}
+
+	#back-button
+	{
+	    display:block;
+	    float:right;
+	    background-image:url(container/back-button.png);
+	    width:57px;
+	    height:51px;
+	    margin:10px 20px 0 0;
+	}
+	
 	</style>
 	
-    <link rel="stylesheet" href="video-js.css" type="text/css" media="screen" charset="utf-8">
 </head>
 <body>
-
-<script type="text/javascript" charset="utf-8" src="video.js"></script>
+	
+<div id="banner">
+	<div id="course-title">
+		<h1>Dynamax&trade; All-Wheel Drive (AWD) Course and Test</h1>
+		<h2>Module 2</h2>
+	</div>
+	<div id="kia-logo">
+		<img src="container/kialogo.png" width="240" height="48"/>
+	</div>
+	<div id="menubar"></div>
+</div>
+<div id="stage"></div>
+<div id="navbar">
+	<a href="#" id="menu-button"></a>
+	<a href="#" id="next-button"></a>
+	<a href="#" id="play-button"></a>
+	<a href="#" id="pause-button"></a>
+	<a href="#" id="replay-button"></a>
+	<a href="#" id="back-button"></a>
+	<div style="clear:both"></div>
+</div>
+		
 <script type="text/javascript" charset="utf-8" src="ext-base.js"></script>
 <script type="text/javascript" charset="utf-8" src="ext-all.js"></script>
 <script type="text/javascript" charset="utf-8" src="lib.js"></script>
@@ -41,7 +181,13 @@ var stage;
 
 
 Ext.onReady(function() {
+	Ext.get("play-button").on('click', function() {
+		stage.start();
+	});
 	
+	Ext.get("next-button").on('click', function() {
+		stage.nextChapter();
+	});
 /*
 var stage = new f.Stage().width(1000).height(600).script({
 	chapter()
@@ -53,7 +199,7 @@ var stage = new f.Stage().width(1000).height(600).script({
 });
 */
 
-stage = new f.Stage({width: 1024, height:window.innerHeight, chapterIndex: 0});
+stage = new f.Stage({elid: "stage", width: 1024, height:window.innerHeight - 62 - 90, chapterIndex: 0});
 
 	with(stage) {
 		

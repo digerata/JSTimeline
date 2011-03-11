@@ -1,7 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>stage</title>
@@ -10,12 +8,20 @@
 	<style>
 	body {
 		margin:0;
+		font-family: Helvetica, Arial, Sans-serif;
+	}
+	
+	#stage-prompt {
+		-webkit-border-radius: 7px;
+		padding: 10px;
+		border: 1px solid #aaa;
+		background-color: #eee;
+		color: #666;
+		text-align: center;
 	}
 	</style>
 </head>
 <body>
-
-<a href="javascript:start();">Start</a>
 
 <script type="text/javascript" charset="utf-8" src="ext-base.js"></script>
 <script type="text/javascript" charset="utf-8" src="ext-all.js"></script>
@@ -31,10 +37,6 @@ var stage;
 
 
 
-function start() {
-	stage.start();
-}
-
 Ext.onReady(function() {
 	
 /*
@@ -48,37 +50,40 @@ var stage = new f.Stage().width(1000).height(600).script({
 });
 */
 
-stage = new f.Stage({width: 1022, height:600});
+stage = new f.Stage({width: 1024, height:window.innerHeight, chapterIndex: 0});
 
 	with(stage) {
-
+		
 		with(chapter("First Chapter")) {
+			
+			asset({ name: "background", type: "image", src: "assets/background.png", width: 1024, height: 768 });
+			asset({ name: "video", type: "video", src: "assets/1000.mp4", width: 618, height: 348 });
+			//asset({ name: "vo", type: "audio", src: "assets/1000.mp3" });
+			
+			/*
 			asset({ name: "bg", type: "image", src: "background.jpg"});
 			asset({ name: "logo1", type: "image", src: "http://flowz.com/images/logo-84.png" });
 			asset({ name: "logo2", type: "image", src: "http://flowz.com/images/logo-84.png" });
 			asset({ name: "chapter-title", type: "html", markup: { tag: 'h1', html: "Chapter 1", style: "position: absolute; z-index: 10" } });
 			asset({ name: "boarding.mp3", type: "audio", src: "sounds/boarding.mp3" });
 			asset({ name: "prompt", type: "html", markup: { tag: 'h2', html: "You should hear background audio now.", style: "position: absolute; z-index: 10"} });
-			
+			*/
 			//asset({ type: "html", })
 			
-			with(scene("First scene.").voiceover("boarding.mp3")) {
+			//with(scene("First scene.").voiceover("boarding.mp3")) {
+			with(scene("Video Demonstration").duration(22)) {
 				
-				
-				at("0:00").asset("bg").zindex(1).fadeIn().position(0, 0);
-				at("0:00").asset("chapter-title").zindex(20).fadeIn().position(10, 10);
-				
-				at("0:00").asset("prompt").update("Scene 1");
-				at("0:00").asset("prompt").zindex(20).fadeIn().position(10, 100);
-				
-				
-				//at("0:00").asset("boarding.mp3").play();
-				at("0:01").asset("logo1").slideInFromTop(100,300);
-				at("0:02").asset("logo1").fadeOut();
-				
-				at("0:04").asset("prompt").update("Now next scene...");
+				at("0:00").asset("background").zindex(1).position(0, 0);
+				//at("0:01").asset("vo").play();
+				//at("0:00").asset("video").fadeIn().position("CENTER");
+				//at("0:00").asset("video").fadeIn().position("CENTER");
+				at("0:00").asset("video").show("CENTER");
+				at("0:01").asset("video").play();
+				at("0:20").asset("video").fadeOut();
 			}
-
+			
+			//wait();
+			/*
 			//with(scene("First scene.").voiceover(0)) {
 			with(scene("Second scene.").duration(5)) {
 				at("0:00").asset("prompt").update("Scene 2");
@@ -90,25 +95,39 @@ stage = new f.Stage({width: 1022, height:600});
 				at("0:02").asset(1).fadeOut();
 				at("0:04").asset(5).update("Now, next chapter.");
 			}
+			*/
 		}
 		with(chapter("Second Chapter")) {
-			asset({ type: "image", src: "background2.jpg"});
-			asset({ type: "html", markup: { tag: 'h1', html: "Chapter 2", style: "position: absolute; z-index: 10" } });
-			asset({ type: "html", markup: { tag: 'h1', html: "BOOYAH!", style: "position: absolute; z-index: 10"} });
-			asset({ type: "image", src: "http://flowz.com/images/logo-84.png" });
-			asset({ type: "audio", src: "sounds/drop.mp3" });
+			asset({ name: "background", type: "image", src: "assets/background.png", width: 1024, height: 768 });
+			asset({ name: "conditions", type: "image", src: "assets/scene2-conditions.png" });
+			asset({ name: "vo", type: "audio", src: "assets/3400.mp3" });
+			asset({ name: "goodbye", type: "html", markup: { tag: 'h1', html: "Signing Off Now...", style: "position: absolute; z-index: 10" }})
 			//asset({ type: "html", })
 
 			//with(scene("First scene.").voiceover(0)) {
-			with(scene("First scene.").duration(5)) {
+			with(scene("First scene.").duration(200)) {
 				//at("0:00").asset(0).position(100, 100).fadeIn();
-				at("0:00").asset(0).zindex(0).fadeIn().position(0, 0);
-				at("0:00").asset(1).fadeIn().position(10, 10);
-				at("0:01").asset(4).play();
-				at("0:02").asset(4).play();
-				at("0:02").asset(3).fadeIn().position(50, 200);
-				at("0:03").asset(2).fadeIn().position(50, 100);
-				at("0:03").asset(4).play();
+				at("0:00").asset("background").zindex(1).position(0, 0);
+				at("0:00").asset("conditions").fadeIn().position("CENTER");
+				at("0:00").asset("vo").play();
+				// at("0:01").asset("conditions").slideOutToRight();
+				// at("0:01").asset("conditions").slideOutToLeft();
+				at("0:03").asset("conditions").slideOutToLeft();
+				at("0:04").asset("conditions").slideInFromLeft("CENTER");
+				at("0:05").asset("conditions").slideOutToRight();
+				at("0:06").asset("conditions").slideInFromRight("CENTER");
+				
+				at("0:07").asset("conditions").slideTo("TOPLEFT");
+				at("0:08").asset("conditions").slideTo("TOPRIGHT");
+				at("0:09").asset("conditions").slideTo("BOTTOMRIGHT");
+				at("0:10").asset("conditions").slideTo("BOTTOMLEFT");
+				at("0:11").asset("conditions").slideTo("LEFTCENTER");
+				at("0:12").asset("conditions").slideTo("RIGHTCENTER");
+				
+				
+				at("0:13").asset("conditions").fadeOut();
+				at("0:14").asset("goodbye").fadeIn().position("CENTER");
+				at("0:15").endScene();
 				/*
 				at("0:02").asset(0).fadeIn();
 				at("0:03").asset(0).fadeOut();
@@ -128,6 +147,7 @@ stage = new f.Stage({width: 1022, height:600});
 				at("0:05").asset(0).fadeOut();
 				*/
 			}
+	
 		}
 	}
 

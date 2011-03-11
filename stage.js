@@ -18,18 +18,54 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 		this.chapters = new Ext.util.MixedCollection();
 		
 		if(config) {
-			console.log("have config.");
-			console.log(config);
 			if(config.width)
 				this.width = config.width;
-			
+				
 			if(config.height)
 				this.height = config.height;
+				
+			if(this.height > 768)
+				this.height = 768;
+				
+			if(config.chapterIndex)
+				this.chapterIndex = config.chapterIndex;
 		}
 		
 		this.el = Ext.DomHelper.insertFirst(Ext.getBody(), {
-			style: "width: " + this.width + "px; height: " + this.height + "px; border: 1px solid red; overflow: hidden; position: relative;"
+			style: "width: " + this.width + "px; height: " + this.height + "px; overflow: hidden; position: relative;"
 		}, true);
+		
+		this.promptEl = Ext.DomHelper.insertFirst(this.el, {
+			id: "stage-prompt",
+			style: "width: " + parseInt(this.width / 3) + "px; height: 50px; position: absolute; z-index: 100; font-size: 24px; font-weight: bold; margin: auto;", html: "Touch to Start"
+		}, true);
+		
+		this.promptEl.setLeftTop(360, (this.height / 2) - this.promptEl.getHeight());
+		
+		this.promptEl.on("click", function() {
+			this.promptEl.hide();
+			this.start();
+			this.promptEl.removeAllListeners();
+		}, this);
+	},
+	
+	prompt: function(message, onclick) {
+		this.promptEl.update(message);
+		this.promptEl.on("click", function() {
+			this.promptEl.hide();
+			onclick();
+			this.promptEl.removeAllListeners();
+		}, this);
+		
+		this.promptEl.show(true);
+	},
+	
+	updatePrompt: function(message) {
+		this.promptEl.update(message);
+	},
+	
+	dismissPrompt: function() {
+		this.promptEl.hide(true);
 	},
 	
 	defaults: function(config) {
@@ -56,7 +92,10 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 		this.currentChapter.start();
 	},
 	
-	start: function(config) {
+	start: function(chapterIndex) {
+		if(chapterIndex)
+			this.chapterIndex = chapterIndex - 1;
+			
 		this.currentChapter = this.chapters.itemAt(this.chapterIndex);
 		this.currentChapter.start();
 	}
@@ -65,7 +104,7 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 // Let's get these to be static and hang off Stage.
 
 function registerAssetType(type, klass) {
-	console.log("Registering asset type: " + type + " for class: " + klass);
+//	console.log("Registering asset type: " + type + " for class: " + klass);
 	_asset_types.add(type, klass);
 }
 	

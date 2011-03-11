@@ -74,19 +74,46 @@ Ext.extend(f.Scene, Ext.util.Observable, {
 				scope:this
 			}
 			this.seconds = 0;
+			/*
 			this.runner = new Ext.util.TaskRunner();
 			this.runner.start(task);
+			*/
+			Ext.TaskMgr.start(task);
 //			this.timerFired();
 		}
 	},
 	
-	avPromptTouched: function() {
-		
+	pause: function() {
+		this.stop(); // pause == stop.  Have pause to match unpause.
+	},
+	
+	unpause: function() {
+		if(this.voiceoverTrack) {
+			// start audio and register events
+			console.log("Restarting voice over.");
+			this.voiceoverTrack.el.dom.play();
+			
+		} else {
+			console.log("Restarting timer based.");
+			// start timer
+			var task = {
+			    run: this.timerFired,
+			    interval: 1000,
+				scope:this
+			}
+			
+			Ext.TaskMgr.start(task);
+			
+		}
 	},
 	
 	stop: function() {
+		/*
 		if(this.runner)
 			this.runner.stopAll();
+			*/
+			
+		Ext.TaskMgr.stopAll();
 	},
 	
 	htmlEventFired: function(event, el) {
@@ -126,8 +153,6 @@ Ext.extend(f.Scene, Ext.util.Observable, {
 			var list = this.timecodes.get(timecode);
 			if(list) {
 				Ext.each(list, function(item) {
-					console.log("event.start()");
-					console.log(item);
 					item.start();
 				})
 			}
@@ -139,6 +164,7 @@ Ext.extend(f.Scene, Ext.util.Observable, {
 	},
 	
 	sceneComplete: function() {
-		this.chapter.nextScene();
+		console.log("Scene[" + this.title + "] complete");
+		this.chapter.sceneComplete();
 	}
 });

@@ -32,8 +32,6 @@ Ext.extend(f.Asset, Ext.util.Observable, {
 	},
 	
 	insert: function(parentEl) {
-		console.log("this.markup");
-		console.log(this.markup);
 		this.el = Ext.DomHelper.append(parentEl, this.markup, true);
 		//this.el.hide();
 	},
@@ -62,9 +60,7 @@ Ext.extend(f.ImageAsset, f.Asset, {
 		f.ImageAsset.superclass.constructor.call(this, config);
 	},
 	insert: function(parentEl) {
-		console.log("this.markup");
-		console.log(this.markup);
-		this.el = Ext.DomHelper.append(parentEl, {tag:'img', src: this.src, border: 0, style: "position: absolute; top: -1000px; z-index: 10;" }, true);
+		this.el = Ext.DomHelper.append(parentEl, {tag:'img', src: this.src, border: 0, style: "position: absolute; top: 768px; z-index: 10;" }, true);
 	}
 });
 
@@ -78,6 +74,40 @@ Ext.extend(f.VideoAsset, f.Asset, {
 	type: "video",
 	constructor: function(config) {
 		f.VideoAsset.superclass.constructor.call(this, config);
+	},
+
+	insert: function(parentEl) {
+		this.el = Ext.DomHelper.append(parentEl, { tag: "video", preload: "auto", autobuffer: "1", 
+			style: "position: absolute; top: 768px; z-index: 10; width: " + this.width + "px; height: " + this.height + "px", 
+			width: this.width, height: this.height, children: [
+				{ tag: "source", src: this.src }
+		]}, true);
+	},
+	
+	play: function(callback) {
+		if(callback) {
+			this.loadCallback = callback;
+		}
+		
+		this.el.on('progress', function(event, video) {
+			var loaded = parseInt(((video.buffered.end(0) / video.duration) * 100), 10);
+			console.log("loaded: " + loaded + "% of " + this.name);
+			// because onload isn't called on mobile safari, we have to check here...
+			if(loaded < 100) {
+				this.stage.updatePrompt("Loading... " + loaded + "%");
+			}
+			if(loaded == 100) {
+				this.stage.dismissPrompt();
+				if(this.loadCallback)
+					this.loadCallback();
+					
+				video.play();
+			}
+		}, this);
+		
+		this.el.dom.load();
+		
+		this.stage.prompt("Loading...");
 	}
 });
 
@@ -101,9 +131,38 @@ Ext.extend(f.AudioAsset, f.Asset, {
 	},
 	
 	insert: function(parentEl) {
-		this.el = Ext.DomHelper.append(parentEl, { tag: "audio", preload: "auto", autobuffer: "1", children: [
+		this.el = Ext.DomHelper.append(parentEl, { tag: "audio", preload: "auto", autobuffer: "1", style: "position: absolute; top: 768px; z-index: 10;", children: [
 			{ tag: "source", src: this.src }
 		]}, true);
+		
+		this.el = Ext.get(this.el);
+	},
+	
+	play: function(callback) {
+		if(callback) {
+			this.loadCallback = callback;
+		}
+		
+		this.el.on('progress', function(event, audio) {
+			var loaded = parseInt(((audio.buffered.end(0) / audio.duration) * 100), 10);
+			console.log("loaded: " + loaded + "% of " + this.name);
+			if(loaded < 100) {
+				this.stage.updatePrompt("Loading... " + loaded + "%");
+			}
+			// because onload isn't called on mobile safari, we have to check here...
+			if(loaded == 100) {
+				this.stage.dismissPrompt();
+				if(this.loadCallback)
+					this.loadCallback();
+					
+				audio.play();
+			}
+		}, this);
+		
+		console.log("loading audio...");
+		this.el.dom.load();
+		
+		this.stage.prompt("Loading...");
 	}
 });
 

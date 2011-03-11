@@ -63,19 +63,19 @@ Ext.extend(f.Event, Ext.util.Observable, {
 				
 			} else if(x == "TOPLEFT") {
 				x = 0;
-				y = 0;
+				y = 15;
 				
 			} else if(x == "TOPRIGHT") {
-				x = swidth - awidth;
-				y = 0;
+				x = swidth - awidth - 15;
+				y = 15;
 				
 			} else if(x == "BOTTOMLEFT") {
-				x = 0;
-				y = sheight - aheight;
+				x = 15;
+				y = sheight - aheight - 15;
 				
 			} else if(x == "BOTTOMRIGHT") {
-				x = swidth - awidth;
-				y = sheight - aheight;
+				x = swidth - awidth - 15;
+				y = sheight - aheight - 15;
 				
 			} else if(x == "LEFTCENTER") {
 				x = parseInt((swidth / 4) - (awidth / 2));
@@ -292,7 +292,7 @@ Ext.extend(f.Event, Ext.util.Observable, {
 				console.log("Prompting for play...");
 				this.scene.stop();
 				
-				this.stage().prompt("Click to continue (loading A/V)...", function() {
+				this.stage().prompt("Touch next to continue...", function() {
 				
 				this.asset.play(function() {
 					console.log("On " + this.asset.name + " - playing " + this.asset.type);

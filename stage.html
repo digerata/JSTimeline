@@ -11,19 +11,42 @@
 		font-family: Helvetica, Arial, Sans-serif;
 	}
 	
+	#start-prompt {
+		background: url(container/touch-to-start.png);
+		width: 479px;
+		height: 143px;
+		position: absolute;
+	}
+	
 	#stage-prompt {
-		-webkit-border-radius: 7px;
-		padding: 10px;
-		border: 1px solid #aaa;
-		background-color: #eee;
+		background: url(container/prompt-bg.png);
 		color: #666;
+		padding: 15px 5px 0 5px;
+		width: 460px;
+		height: 144px;
 		text-align: center;
+		color: maroon;
+	}
+	
+	ul, ol, li {
+		margin-left: 0;
+		padding-left; 0;
+	}
+	
+	.placeholder {
+		-webkit-border-bottom-right-radius: 10px;
+		-webkit-border-top-right-radius: 10px;
+		-webkit-box-shadow: #333 5px 5px 5px;
+		padding: 0 10px 10px 15px;
+		
+		background-color: #FFF;
+		color: #666;
 	}
 	
 	#banner
 	{
 	    background-color:white;
-		height: 90px;
+		height: 89px;
 	}
 
 	#course-title
@@ -148,7 +171,7 @@
 <div id="banner">
 	<div id="course-title">
 		<h1>Dynamax&trade; All-Wheel Drive (AWD) Course and Test</h1>
-		<h2>Module 2</h2>
+		<h2>Module 1</h2>
 	</div>
 	<div id="kia-logo">
 		<img src="container/kialogo.png" width="240" height="48"/>
@@ -185,9 +208,12 @@ Ext.onReady(function() {
 		stage.start();
 	});
 	
+	/*
 	Ext.get("next-button").on('click', function() {
 		stage.nextChapter();
 	});
+	*/
+	
 /*
 var stage = new f.Stage().width(1000).height(600).script({
 	chapter()
@@ -199,14 +225,44 @@ var stage = new f.Stage().width(1000).height(600).script({
 });
 */
 
-stage = new f.Stage({elid: "stage", width: 1024, height:window.innerHeight - 62 - 90, chapterIndex: 0});
+stage = new f.Stage({elid: "stage", width: 1024, height:window.innerHeight - 62 - 89, chapterIndex: 0});
+
 
 	with(stage) {
 		
-		with(chapter("First Chapter")) {
-			
+		with(chapter("Module 1")) {
+
+			asset({ name: "500", type: "audio", src: "assets/500.mp3" });
 			asset({ name: "background", type: "image", src: "assets/background.png", width: 1024, height: 768 });
+			asset({ name: "title", type: "image", src: "assets/title.png" });
 			asset({ name: "video", type: "video", src: "assets/1000.mp4", width: 618, height: 348 });
+			asset({ name: "1010-image", type: "image", src: "assets/1010.jpg" });
+			asset({ name: "1010-audio", type: "audio", src: "assets/1010.mp3" });
+			asset({ name: "1020-image", type: "image", src: "assets/1020.jpg" });
+			asset({ name: "1020-audio", type: "audio", src: "assets/1020.mp3" });
+			
+			asset({ name: "1010-list", type: "html", markup: {
+				tag: 'div', cls: "placeholder", style: "width: 300px; height: 150px; padding-top: 5px;", children: [
+				{ tag: 'ul', children: [
+					{ tag: 'li', html: 'Dynamax All-Wheel Drive (AWD) system operation' },
+					{ tag: 'li', html: 'Overall control' },
+					{ tag: 'li', html: 'Product positioning to customers' },
+					{ tag: 'li', html: 'Competitive advantages' },
+					{ tag: 'li', html: 'Delivery tips' }
+				]}
+			]}});
+			
+			asset({ name: "1020-list", type: "html", markup: {
+				tag: 'div', cls: "placeholder", style: "width: 300px; height: 265px;", children: [
+					{ tag: 'h3', html: 'COURSE MODULES', style: 'color: maroon;' },
+					{ tag: 'p', html: 'Module 1: Introduction' },
+					{ tag: 'p', html: 'Module 2: Key Feature Highlights' },
+					{ tag: 'p', html: 'Module 3: System Operation' },
+					{ tag: 'p', html: 'Module 4: Selling the System' },
+					{ tag: 'p', html: 'Module 5: Post Test' },
+					{ tag: 'p', html: 'Click NEXT to move to Module 2.' }
+				]
+			}});
 			//asset({ name: "vo", type: "audio", src: "assets/1000.mp3" });
 			
 			/*
@@ -220,18 +276,35 @@ stage = new f.Stage({elid: "stage", width: 1024, height:window.innerHeight - 62 
 			//asset({ type: "html", })
 			
 			//with(scene("First scene.").voiceover("boarding.mp3")) {
-			with(scene("Video Demonstration").duration(22)) {
+			with(scene("Introduction").duration(120)) {
 				
 				at("0:00").asset("background").zindex(1).position(0, 0);
+				at("0:00").asset("title").slideInFromRight("CENTER");
+				at("0:00").asset("500").play();
+				
+				at("0:08").asset("title").slideOutToLeft();
 				//at("0:01").asset("vo").play();
 				//at("0:00").asset("video").fadeIn().position("CENTER");
 				//at("0:00").asset("video").fadeIn().position("CENTER");
-				at("0:00").asset("video").show("CENTER");
-				at("0:01").asset("video").play();
-				at("0:20").asset("video").fadeOut();
+				at("0:09").asset("video").fadeIn().position("CENTER");
+				at("0:09").asset("video").play();
+				at("0:28").asset("video").fadeOut();
+				at("0:29").asset("1010-audio").play();
+				// 18 seconds
+				at("0:30").asset("1010-image").slideInFromRight("BOTTOMRIGHT");
+				at("0:30").asset("1010-list").slideInFromLeft("TOPLEFT");
+				at("1:04").asset("1020-audio").play();
+				// 33
+				at("1:05").asset("1010-image").fadeOut();
+				at("1:05").asset("1010-list").fadeOut();
+				
+				
+				at("1:06").asset("1020-image").slideInFromRight("BOTTOMRIGHT");
+				at("1:06").asset("1020-list").slideInFromLeft("TOPLEFT");
+				
 			}
 			
-			//wait();
+			wait();
 			/*
 			//with(scene("First scene.").voiceover(0)) {
 			with(scene("Second scene.").duration(5)) {
@@ -246,16 +319,17 @@ stage = new f.Stage({elid: "stage", width: 1024, height:window.innerHeight - 62 
 			}
 			*/
 		}
-		with(chapter("Second Chapter")) {
+		with(chapter("Module 2")) {
 			asset({ name: "background", type: "image", src: "assets/background.png", width: 1024, height: 768 });
-			asset({ name: "conditions", type: "image", src: "assets/scene2-conditions.png" });
-			asset({ name: "vo", type: "audio", src: "assets/3400.mp3" });
+			asset({ name: "3400-vo", type: "audio", src: "assets/3400.mp3" });
+			asset({ name: "3450-vo", type: "audio", src: "assets/3450.mp3" });
 			asset({ name: "goodbye", type: "html", markup: { tag: 'h1', html: "Signing Off Now...", style: "position: absolute; z-index: 10" }})
 			//asset({ type: "html", })
 
 			//with(scene("First scene.").voiceover(0)) {
 			with(scene("First scene.").duration(200)) {
 				//at("0:00").asset(0).position(100, 100).fadeIn();
+				/*
 				at("0:00").asset("background").zindex(1).position(0, 0);
 				at("0:00").asset("conditions").fadeIn().position("CENTER");
 				at("0:00").asset("vo").play();

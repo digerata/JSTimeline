@@ -46,27 +46,49 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 		}
 		
 		
-		this.promptEl = Ext.DomHelper.insertFirst(this.el, {
-			id: "stage-prompt",
-			style: "width: " + parseInt(this.width / 3) + "px; height: 50px; position: absolute; z-index: 100; font-size: 24px; font-weight: bold; margin: auto;", html: "Touch to Start"
+		this.startEl = Ext.DomHelper.insertFirst(this.el, {
+			id: "start-prompt"
 		}, true);
 		
-		this.promptEl.setLeftTop(360, (this.height / 2) - this.promptEl.getHeight());
+		//this.startEl.setLeftTop(360, (this.height / 2) - this.startEl.getHeight());
+		this.startEl.center();
 		
-		this.promptEl.on("click", function() {
+		this.startEl.on("click", function() {
 			this.start();
 		}, this);
+		
+		this.promptEl = Ext.DomHelper.insertFirst(this.el, {
+			id: "stage-prompt",
+			style: "position: absolute; z-index: 100; font-size: 24px; font-weight: bold; margin: auto;"
+		}, true);
+		
+		this.promptEl.hide();
+		
+		
 	},
 	
 	prompt: function(message, onclick) {
 		this.promptEl.update(message);
 		this.promptEl.on("click", function() {
-			this.promptEl.hide();
+			this.dismissPrompt();
 			onclick();
-			this.promptEl.removeAllListeners();
 		}, this);
 		
-		this.promptEl.show(true);
+		Ext.get("next-button").on('click', function() {
+			this.dismissPrompt();
+			onclick();
+			Ext.get("next-button").removeAllListeners();
+		}, this);
+		
+		var x = parseInt((this.width / 2) - (this.promptEl.getWidth() / 2));
+		//var y = this.height - (this.promptEl.getHeight() + 15);
+		//var y = this.height - 15;
+		var y = this.height + 30;
+		
+		this.promptEl.setLeftTop(x, this.height);
+		this.promptEl.show();
+		this.promptEl.shift({ x: x, y: y});
+		
 	},
 	
 	updatePrompt: function(message) {
@@ -74,7 +96,9 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 	},
 	
 	dismissPrompt: function() {
-		this.promptEl.hide(true);
+		console.log("Height: " + this.height);
+		this.promptEl.shift({ top: this.height });
+		this.promptEl.removeAllListeners();
 	},
 	
 	defaults: function(config) {
@@ -104,8 +128,8 @@ Ext.extend(f.Stage, Ext.util.Observable, {
 	},
 	
 	start: function(chapterIndex) {
-		this.promptEl.hide();
-		this.promptEl.removeAllListeners();
+		this.startEl.hide();
+		this.startEl.removeAllListeners();
 		
 		if(chapterIndex)
 			this.chapterIndex = chapterIndex - 1;

@@ -123,17 +123,21 @@ Ext.extend(f.VideoAsset, f.Asset, {
 			if(loaded < 100) {
 				this.stage.updatePrompt("Loading... " + loaded + "%");
 			}
+			/*
 			if(loaded == 100) {
 				this.stage.dismissPrompt();
 			}
+			*/
 		}, this);
 		
 		this.el.on('canplaythrough', function(event, video) {
+			this.stage.dismissPrompt();
 			console.log("Can play through received.");
 			console.log(event);
+			video.play();
 			if(this.loadCallback)
 				this.loadCallback();
-			video.play();
+			
 		}, this);
 		
 		this.el.on("load", function() {

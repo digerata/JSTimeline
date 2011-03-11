@@ -60,7 +60,16 @@ Ext.extend(f.ImageAsset, f.Asset, {
 		f.ImageAsset.superclass.constructor.call(this, config);
 	},
 	insert: function(parentEl) {
-		this.el = Ext.DomHelper.append(parentEl, {tag:'img', src: this.src, border: 0, style: "position: absolute; top: 768px; z-index: 10;" }, true);
+		if(this.placeholder) {
+			if(!this.width)
+				this.width = 100;
+			if(!this.height) 
+				this.height = 100;
+			this.el = Ext.DomHelper.append(parentEld, {tag: 'div', cls: 'placeholder', style: "position: absolute; top: 768px; z-index: 10; width: " + this.width + "px; height: " + this.height + "px;"
+				html: this.placeholder }, true);
+		} else {
+			this.el = Ext.DomHelper.append(parentEl, {tag:'img', src: this.src, border: 0, style: "position: absolute; top: 768px; z-index: 10;" }, true);
+		}
 	}
 });
 
@@ -77,14 +86,32 @@ Ext.extend(f.VideoAsset, f.Asset, {
 	},
 
 	insert: function(parentEl) {
+		
 		this.el = Ext.DomHelper.append(parentEl, { tag: "video", preload: "auto", autobuffer: "1", 
 			style: "position: absolute; top: 768px; z-index: 10; width: " + this.width + "px; height: " + this.height + "px", 
 			width: this.width, height: this.height, children: [
 				{ tag: "source", src: this.src }
 		]}, true);
+		
+		/*
+		
+		this.el = Ext.DomHelper.append(parentEl, 
+			{ tag: "div", cls: "video-js-box", style: "position: absolute; top: 768px; z-index: 10; width: " + this.width + "px; height: " + this.height + "px",
+			children: [
+				{ tag: "video", cls: "video-js", preload: "auto", autobuffer: "1", width: this.width, height: this.height, children: [
+					{ tag: "source", src: this.src, type: "video/mp4;" }
+				]}
+			]}, true);
+			
+		this.player = VideoJS.setup(this.el.id);
+		console.log(this.player);
+		this.player.play();
+		*/
 	},
 	
 	play: function(callback) {
+		//this.player.play();
+
 		if(callback) {
 			this.loadCallback = callback;
 		}
@@ -98,11 +125,36 @@ Ext.extend(f.VideoAsset, f.Asset, {
 			}
 			if(loaded == 100) {
 				this.stage.dismissPrompt();
-				if(this.loadCallback)
-					this.loadCallback();
-					
-				video.play();
 			}
+		}, this);
+		
+		this.el.on('canplaythrough', function(event, video) {
+			console.log("Can play through received.");
+			console.log(event);
+			if(this.loadCallback)
+				this.loadCallback();
+			video.play();
+		}, this);
+		
+		this.el.on("load", function() {
+			console.log(this.name + " -> load");
+		}, this);
+		
+		this.el.on("loadstart", function() {
+			console.log(this.name + " -> loadstart");
+		}, this);
+		
+		this.el.on("stalled", function() {
+			this.stage.updatePrompt("Network Stalled");
+			console.log(this.name + " -> stalled");
+		}, this);
+		
+		this.el.on("loadedmetadata", function() {
+			console.log(this.name + " -> loadedmetadata");
+		}, this);
+		
+		this.el.on("loadeddata", function() {
+			console.log(this.name + " -> loadeddata");
 		}, this);
 		
 		this.el.dom.load();
